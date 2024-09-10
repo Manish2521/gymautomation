@@ -15,7 +15,7 @@ const port = process.env.PORT || 5000;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'http://localhost:5173', // Specify your frontend origin
+  origin: 'https://gymautomation.netlify.app/', // Specify your frontend origin
   credentials: true, // Allow credentials (cookies) to be included
 }));
 app.use(cookieParser()); // Use cookie-parser middleware
