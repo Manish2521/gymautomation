@@ -27,7 +27,7 @@ const LoginPage = () => {
 
     try {
       // Replace with your backend login route
-      const response = await axios.post('http://localhost:5000/login', {
+      const response = await axios.post('https://gymautomation.onrender.com/login', {
         username,
         password,
       });
