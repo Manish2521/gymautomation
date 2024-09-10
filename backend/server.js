@@ -36,6 +36,11 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
+//Default route
+app.get("/", (req,res) => {
+  res.json("Hello");
+})
+
 // Login endpoint
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
