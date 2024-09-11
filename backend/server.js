@@ -84,7 +84,7 @@ app.post('/login', async (req, res) => {
 });
 
 try {
-  const user = await User.findOne({ username });
+  const user = User.findOne({ username });
 }
 else {
   console.log(" Unable to get user Details");
