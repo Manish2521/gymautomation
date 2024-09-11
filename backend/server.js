@@ -9,8 +9,6 @@ require('dotenv').config(); // For loading environment variables
 const app = express();
 const port = process.env.PORT || 5000;
 
-const now = new Date();
-
 
 const options = {
   year: 'numeric',
@@ -23,8 +21,8 @@ const options = {
   timeZone: 'Asia/Kolkata'
 };
 
-const now = new Date();
-const formattedDateTime = now.toLocaleString('en-IN', options);  
+const currentDateTime = new Date();
+const formattedDateTime = currentDateTime.toLocaleString('en-IN', options);  
 
 
 // Middleware
