@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { BounceLoader } from 'react-spinners'; // Import spinner component
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -9,39 +8,25 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Function to generate a random token
-  const generateToken = () => {
-    const chars =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
-    let token = '';
-    for (let i = 0; i < 32; i++) {
-      token += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return token;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Clear any previous error
-    // setLoading(true); // Start loading
+    setError('');
 
     try {
-      // Replace with your backend login route
       const response = await axios.post('https://gymautomation.onrender.com/login', {
         username,
         password,
+      }, {
+        withCredentials: true // Allow credentials (cookies) to be included
       });
 
       if (response.status === 200) {
-        const token = generateToken();  // Generate secure token
-        localStorage.setItem('token', token);
         navigate('/landingpage');
       } else {
         setError('An unexpected error occurred. Please try again.');
       }
     } catch (err) {
       if (err.response) {
-        // Server responded with a status code outside the range of 2xx
         if (err.response.status === 401) {
           setError('Incorrect username or password.');
         } else if (err.response.status === 500) {
@@ -50,16 +35,11 @@ const LoginPage = () => {
           setError('An unexpected error occurred. Please try again.');
         }
       } else if (err.request) {
-        // No response was received
         setError('Unable to connect to the server. Please try again later.');
       } else {
-        // Error occurred in setting up the request
         setError('An error occurred. Please try again.');
       }
     }
-    // finally {
-    //   setLoading(false); // End loading
-    // }
   };
 
   return (
