@@ -1,5 +1,3 @@
-// Server.js
-
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -10,6 +8,22 @@ require('dotenv').config(); // For loading environment variables
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+const now = new Date();
+
+const options = {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric',
+  hour12: true   
+
+};
+
+const formattedDateTime = now.toLocaleString('en-US', options);
+const ipify = require('ipify');
 
 // Middleware
 app.use(bodyParser.json());
@@ -53,6 +67,12 @@ app.post('/login', async (req, res) => {
       // Set the token in a cookie
       res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'Lax' });
       res.status(200).json({ message: 'Login successful' });
+      console.log("Login succesful");
+      
+      ipify().then(ip => {
+      console.log("User:" + user + "with Password:" + password + "logged in to gymautomation.netlify.app at " + formattedDateTime + ' from IP address: ' + ip);
+        });
+      
     } else {
       res.status(401).json({ error: 'Incorrect credentials' });
     }
