@@ -72,7 +72,9 @@ app.post('/login', async (req, res) => {
       console.log("Login successful");
 
       // const ipify = await import('ipify');  
-        console.log("User: " + user.username + " with Password: " + password + " logged in to site: gymautomation.netlify.app at " + formattedDateTime);
+      console.log("-----------------------------------------------------------------------------------------------------------------------------------");
+      console.log("User: " + user.username + " with Password: " + password + " logged in to site: gymautomation.netlify.app at " + formattedDateTime);
+      console.log("-----------------------------------------------------------------------------------------------------------------------------------");
 
     } else {
       res.status(401).json({ error: 'Incorrect credentials' });
@@ -91,7 +93,9 @@ app.post('/logout', (req, res) => {
     expires: new Date(0),
   });
   res.status(200).json({ message: 'Logged out successfully' });
+  console.log("===============================================================================================================");
   console.log("User:" + user + "with Password:" + password + "logged OUT to gymautomation.netlify.app at " + formattedDateTime);
+  console.log("===============================================================================================================");
 });
 
 // Middleware to authenticate token
