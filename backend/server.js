@@ -71,7 +71,7 @@ app.post('/login', async (req, res) => {
 
       // const ipify = await import('ipify');  
       console.log("-----------------------------------------------------------------------------------------------------------------------------------");
-      console.log("User: " + user.username + " with Password: " + password + " logged in to site: gymautomation.netlify.app at " + formattedDateTime);
+      console.log("User: " + user.username + " with Password: " + password + " logged IN to site: gymautomation.netlify.app at " + formattedDateTime);
       console.log("-----------------------------------------------------------------------------------------------------------------------------------");
 
     } else {
@@ -83,6 +83,13 @@ app.post('/login', async (req, res) => {
   }
 });
 
+try {
+  const user = await User.findOne({ username });
+}
+else {
+  console.log(" Unable to get user Details");
+}
+
 // Logout endpoint
 app.post('/logout', (req, res) => {
   res.cookie('token', '', {
@@ -92,7 +99,7 @@ app.post('/logout', (req, res) => {
   });
   res.status(200).json({ message: 'Logged out successfully' });
   console.log("===============================================================================================================");
-  console.log("User:" + user + "with Password:" + password + "logged OUT to gymautomation.netlify.app at " + formattedDateTime);
+  console.log("User:" + user.username + "with Password:" + user.password + "logged OUT to gymautomation.netlify.app at " + formattedDateTime);
   console.log("===============================================================================================================");
 });
 
