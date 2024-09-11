@@ -11,6 +11,7 @@ const port = process.env.PORT || 5000;
 
 const now = new Date();
 
+
 const options = {
   year: 'numeric',
   month: 'long',
@@ -18,10 +19,13 @@ const options = {
   hour: 'numeric',
   minute: 'numeric',
   second: 'numeric',
-  hour12: true
+  hour12: true,
+  timeZone: 'Asia/Kolkata'
 };
 
-const formattedDateTime = now.toLocaleString('en-US', options);
+const now = new Date();
+const formattedDateTime = now.toLocaleString('en-IN', options);  
+
 
 // Middleware
 app.use(bodyParser.json());
@@ -68,7 +72,7 @@ app.post('/login', async (req, res) => {
       console.log("Login successful");
 
       // const ipify = await import('ipify');  
-        console.log("User:" + user + "with Password:" + password + "logged in to gymautomation.netlify.app at " + formattedDateTime);
+        console.log("User: " + user.username + " with Password: " + password + " logged in to site: gymautomation.netlify.app at " + formattedDateTime);
 
     } else {
       res.status(401).json({ error: 'Incorrect credentials' });
