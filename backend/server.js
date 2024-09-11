@@ -83,12 +83,12 @@ app.post('/login', async (req, res) => {
   }
 });
 
-try {
-  const user = User.findOne({ username });
-}
-finally {
-  console.log(" Unable to get user Details");
-}
+// try {
+//   const user = User.findOne({ username });
+// }
+// finally {
+//   console.log(" Unable to get user Details");
+// }
 
 // Logout endpoint
 app.post('/logout', (req, res) => {
@@ -99,7 +99,7 @@ app.post('/logout', (req, res) => {
   });
   res.status(200).json({ message: 'Logged out successfully' });
   console.log("===============================================================================================================");
-  console.log("User:" + user.username + "with Password:" + user.password + "logged OUT to gymautomation.netlify.app at " + formattedDateTime);
+  console.log("User logged OUT to gymautomation.netlify.app at " + formattedDateTime);
   console.log("===============================================================================================================");
 });
 
