@@ -49,6 +49,9 @@ const LoginPage = () => {
         setError('An unexpected error occurred. Please try again.');
       }
     } catch (err) {
+      
+      clearTimeout(timeout);  //Prevent for getting two error same time 
+      
       if (err.response) {
         if (err.response.status === 401) {
           setError('Incorrect username or password.');
