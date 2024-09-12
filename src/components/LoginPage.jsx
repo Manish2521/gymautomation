@@ -24,6 +24,11 @@ const LoginPage = () => {
     setError(''); // Clear any previous error
     // setLoading(true); // Start loading
 
+    let timeout = setTimeout(() => {
+      setError('Response not received. Please try again after 1 minute.');
+    }, 5000); // Timeout after 5 seconds    
+    
+
     try {
       const response = await axios.post('https://gymautomation.onrender.com/login', {
         username,
@@ -31,11 +36,14 @@ const LoginPage = () => {
       }, {
         withCredentials: true 
       });
-
+      
+      clearTimeout(timeout);
+      
       if (response.status === 200) {
         const token = generateToken();  
         localStorage.setItem('token', token);
         navigate('/landingpage');
+
 
       } else {
         setError('An unexpected error occurred. Please try again.');
