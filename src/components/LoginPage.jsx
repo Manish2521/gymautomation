@@ -53,7 +53,7 @@ const LoginPage = () => {
       setLoading(false); // Stop loading on error
       
       if (err.response) {
-        console.error('Response error:', err.response); 
+        console.error('Response error code:', err.response.status); 
         if (err.response.status === 401) {
           setError('Incorrect username or password.');
         } else if (err.response.status === 500) {
@@ -62,10 +62,10 @@ const LoginPage = () => {
           setError('An unexpected error occurred. Please try again.');
         }
       } else if (err.request) {
-        console.error('Response error:', err.response); 
+        console.error('Response error code:', err.response.status); 
         setError('Unable to connect to the server. Please try again later.');
       } else {
-        console.error('Response error:', err.response); 
+        console.error('Response error code:', err.response.status); 
         setError('An error occurred. Please try again.');
       }
     }
