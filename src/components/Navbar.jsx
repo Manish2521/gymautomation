@@ -10,6 +10,15 @@ const initialNavigation = [
   { name: 'Dashboard', to: '/dashboard', current: false },
 ];
 
+const handleLogout = async () => {
+  try {
+    await fetch('https://gymautomation.onrender.com/logout', { method: 'POST', credentials: 'include' });
+    localStorage.removeItem('token');
+    navigate('/');
+  } catch (error) {
+    console.error('Logout failed:', error);
+  }
+};
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
