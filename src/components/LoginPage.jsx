@@ -26,7 +26,7 @@ const LoginPage = () => {
     setLoading(true); // Start loading
 
     let timeout = setTimeout(() => {
-      setError('Response not received. Please try again after 1 minute.');
+      setError('Server busy. Please try again after 1 minute.');
       setLoading(false); // Stop loading after timeout
     }, 5000); // Timeout after 5 seconds
 
