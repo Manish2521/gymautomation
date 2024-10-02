@@ -1,99 +1,85 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Table = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchType, setSearchType] = useState('name'); // New state for search type
-
-  const data = [
-    { name: 'John Doe', category: 'Gym', startDate: '2024-01-01', endDate: '2025-01-01', status: 'Active' },
-    { name: 'Jane Smith', category: 'Yoga', startDate: '2024-02-01', endDate: '2024-12-01', status: 'Active' },
-    { name: 'Mike Johnson', category: 'Gym', startDate: '2023-05-15', endDate: '2024-05-15', status: 'Expired' },
-    { name: 'Emily Davis', category: 'Yoga', startDate: '2023-09-01', endDate: '2024-09-01', status: 'Expired' },
-    { name: 'David Wilson', category: 'Zumba', startDate: '2024-03-01', endDate: '2025-03-01', status: 'Active' },
-    { name: 'Sarah Brown', category: 'Yoga', startDate: '2024-04-01', endDate: '2025-04-01', status: 'Active' },
-    { name: 'Chris Lee', category: 'Gym', startDate: '2023-06-01', endDate: '2024-06-01', status: 'Expired' },
-    { name: 'Anna Garcia', category: 'Zumba', startDate: '2024-01-15', endDate: '2025-01-15', status: 'Active' },
-    { name: 'Kevin Martinez', category: 'Gym', startDate: '2023-11-01', endDate: '2024-11-01', status: 'Expired' },
-    { name: 'Laura Hernandez', category: 'Yoga', startDate: '2024-05-01', endDate: '2025-05-01', status: 'Active' },
-    { name: 'Mark Anderson', category: 'Gym', startDate: '2023-08-15', endDate: '2024-08-15', status: 'Expired' },
-    { name: 'Sophia Thomas', category: 'Zumba', startDate: '2024-06-01', endDate: '2025-06-01', status: 'Active' },
-    { name: 'Anna Garcia', category: 'Zumba', startDate: '2024-01-15', endDate: '2025-01-15', status: 'Active' },
-    { name: 'Kevin Martinez', category: 'Gym', startDate: '2023-11-01', endDate: '2024-11-01', status: 'Expired' },
-    { name: 'Laura Hernandez', category: 'Yoga', startDate: '2024-05-01', endDate: '2025-05-01', status: 'Active' },
-    { name: 'Mark Anderson', category: 'Gym', startDate: '2023-08-15', endDate: '2024-08-15', status: 'Expired' },
-    { name: 'Sophia Thomas', category: 'Zumba', startDate: '2024-06-01', endDate: '2025-06-01', status: 'Active' },
-    { name: 'Mike Johnson', category: 'Gym', startDate: '2023-05-15', endDate: '2024-05-15', status: 'Expired' },
-    { name: 'Emily Davis', category: 'Yoga', startDate: '2023-09-01', endDate: '2024-09-01', status: 'Expired' },
-    { name: 'David Wilson', category: 'Zumba', startDate: '2024-03-01', endDate: '2025-03-01', status: 'Active' },
-    { name: 'Sarah Brown', category: 'Yoga', startDate: '2024-04-01', endDate: '2025-04-01', status: 'Active' },
-    { name: 'Chris Lee', category: 'Gym', startDate: '2023-06-01', endDate: '2024-06-01', status: 'Expired' },
-    { name: 'Anna Garcia', category: 'Zumba', startDate: '2024-01-15', endDate: '2025-01-15', status: 'Active' }
+  const cardsData = [
+    {
+      title: 'Total Members',
+      value: 20,
+      description: 'Total number of active gym members.',
+      colorClass: 'bg-blue-500', 
+      link: '/membership', 
+    },
+    {
+      title: 'Available Plans',
+      value: 5,
+      description: 'Total number of plans available for members.',
+      colorClass: 'bg-green-500',
+      link: '#', 
+    },
+    {
+      title: 'Gym Revenue',
+      value: '$5000',
+      description: 'Total revenue generated this month.',
+      colorClass: 'bg-purple-500',
+      link: '#', 
+    },
+    {
+      title: 'Gymers',
+      value: 15,
+      description: 'Number of gym users accessing the facility.',
+      colorClass: 'bg-red-500',
+      link: '#', 
+    },
+    {
+      title: 'Employees',
+      value: 4,
+      description: 'Total employees working in the gym.',
+      colorClass: 'bg-yellow-500',
+      link: '#', 
+    },
+    {
+      title: 'Trainers',
+      value: 2,
+      description: 'Total number of certified trainers available.',
+      colorClass: 'bg-red-500',
+      link: '#', 
+    },
+    {
+      title: 'Gym Equipment',
+      value: 23,
+      description: 'Total equipment available for gym members.',
+      colorClass: 'bg-blue-500',
+      link: '#',
+    },
+    {
+      title: 'Classes Offered',
+      value: 10,
+      description: 'Total number of classes available for members.',
+      colorClass: 'bg-indigo-500',
+      link: '#', 
+    },
   ];
 
-  const filteredData = data.filter(item => {
-    const term = searchTerm.toLowerCase();
-    if (searchType === 'name') {
-      return item.name.toLowerCase().includes(term);
-    } else if (searchType === 'country') {
-      return item.country && item.country.toLowerCase().includes(term);
-    }
-    return false;
-  });
-
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-auto w-full sm:max-w-5xl mt-3">
-      <div className="pb-4 bg-white dark:bg-gray-900 flex flex-col sm:flex-row sm:justify-between gap-4 p-4">
-        {/* <label htmlFor="searchType" className="sr-only">Search By</label> */}
-        {/* <select
-          id="searchType"
-          value={searchType}
-          onChange={(e) => setSearchType(e.target.value)}
-          className="border border-gray-300 rounded-lg text-sm text-gray-900 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 py-2 px-3 w-full sm:w-1/4"
-        >
-          <option value="name">Search by Company Name</option>
-          <option value="country">Search by Country Name</option>
-        </select> */}
-
-        {/* <div className="relative w-full sm:w-3/4">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-            </svg>
-          </div>
-          <input
-            type="text"
-            id="table-search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="block pl-10 pr-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg w-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder={`Search for ${searchType === 'name' ? 'company name' : 'country name'}`}
-          />
-        </div> */}
-      </div>
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-4 py-2">Name</th>
-            <th scope="col" className="px-4 py-2">Type</th>
-            <th scope="col" className="px-4 py-2">Start Date</th>
-            <th scope="col" className="px-4 py-2">End Date</th>
-            <th scope="col" className="px-4 py-2">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.map((item, index) => (
-            <tr key={index} className={item.status === 'Active' ? 'bg-green-100' : 'bg-red-100'}>
-              <td className="px-4 py-2">{item.name}</td>
-              <td className="px-4 py-2">{item.category}</td>
-              <td className="px-4 py-2">{item.startDate}</td>
-              <td className="px-4 py-2">{item.endDate}</td>
-              <td className="px-4 py-2">{item.status}</td>
-            </tr>
+    <div>
+      <div className="flex justify-center items-center min-h-screen p-6 bg-gray-100">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {cardsData.map((card, index) => (
+            <Link
+              key={index}
+              to={card.link}
+              className={`max-w-sm p-6 border border-gray-200 rounded-lg shadow ${card.colorClass} text-white text-center hover:shadow-lg transition-shadow duration-200`}
+            >
+              <h5 className="mb-2 text-2xl font-bold">{card.title}</h5>
+              <p className="mb-3 text-3xl">{card.value}</p>
+              <p className="text-gray-200">{card.description}</p>
+            </Link>
           ))}
-        </tbody>
-      </table>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default Table;

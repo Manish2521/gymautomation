@@ -1,13 +1,19 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'; 
 import { Disclosure } from '@headlessui/react';
 import { Link } from 'react-router-dom';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import cz from './cz.jpg';
+import Membership from './Membership';
 
 const initialNavigation = [
   { name: 'Home', to: '/', current: false },
+  { name: 'New Registration', to: '/dashboard', current: false },
   { name: 'Dashboard', to: '/dashboard', current: false },
+  { name: 'Membership', to: '/membership', current: false },
+  { name: 'Trainer', to: '/dashboard', current: false },
+  { name: 'Employees', to: '/dashboard', current: false },
+
 ];
 
 function classNames(...classes) {
@@ -16,14 +22,14 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const [navigation, setNavigation] = React.useState(initialNavigation);
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate(); 
 
-  // Define handleLogout inside Navbar component
+  // Define handleLogout 
   const handleLogout = async () => {
     try {
       await fetch('https://gymautomation.onrender.com/logout', { method: 'POST', credentials: 'include' });
       localStorage.removeItem('token');
-      navigate('/'); // Use navigate here
+      navigate('/'); 
     } catch (error) {
       console.error('Logout failed:', error);
     }
@@ -72,7 +78,7 @@ export default function Navbar() {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {/* Logout button */}
                 <button
-                  onClick={handleLogout} // Use handleLogout defined within the component
+                  onClick={handleLogout} 
                   className="rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm ring-1 ring-gray-900/10 transition-all hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                 >
                   Logout
