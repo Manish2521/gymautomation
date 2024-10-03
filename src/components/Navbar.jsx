@@ -7,12 +7,12 @@ import cz from './cz.jpg';
 import Membership from './Membership';
 
 const initialNavigation = [
-  { name: 'Home', to: '/', current: false },
+  { name: 'Home', to: '/landingpage', current: false },
   { name: 'New Registration', to: '/dashboard', current: false },
   { name: 'Dashboard', to: '/dashboard', current: false },
   { name: 'Membership', to: '/membership', current: false },
-  { name: 'Trainer', to: '/dashboard', current: false },
-  { name: 'Employees', to: '/dashboard', current: false },
+  { name: 'Trainer', to: '/Trainers', current: false },
+  { name: 'Employees', to: '/Employees', current: false },
 
 ];
 
