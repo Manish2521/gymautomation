@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
-require('dotenv').config(); // For loading environment variables
+require('dotenv').config(); 
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -24,6 +24,8 @@ const options = {
 const currentDateTime = new Date();
 const formattedDateTime = currentDateTime.toLocaleString('en-IN', options);  
 
+const MONGODB_URI = 'mongodb://localhost:27017/userdata'; // Corrected database name
+const ACCESS_TOKEN_SECRET = 'yourSecretKey'; // Replace with your desired secret key
 
 // Middleware
 app.use(bodyParser.json());
@@ -48,6 +50,17 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model('User', userSchema);
+
+// Membership Schema
+const membershipSchema = new mongoose.Schema({
+  name: String,
+  type: String,
+  startDate: String, 
+  endDate: String,   
+  status: { type: String, default: 'Active' }, 
+});
+
+const Membership = mongoose.model('Membership', membershipSchema, 'membership'); 
 
 // Default route
 app.get("/", (req, res) => {
@@ -83,12 +96,105 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// try {
-//   const user = User.findOne({ username });
-// }
-// finally {
-//   console.log(" Unable to get user Details");
-// }
+// Membership route to get all memberships
+app.get('/memberships', async (req, res) => {
+  try {
+    const memberships = await Membership.find(); // Fetch all memberships from the database
+    res.json(memberships);
+  } catch (error) {
+    console.error('Error fetching memberships:', error);
+    res.status(500).json({ error: 'Unable to fetch memberships' });
+    console.log("Error fetching memberships");
+  }
+});
+
+
+// POST endpoint to add a new membership
+app.post('/memberships', async (req, res) => {
+  const { name, type, startDate, endDate } = req.body;
+
+  try {
+    // Check if a membership with the same name already exists
+    const existingMembership = await Membership.findOne({ name });
+
+    if (existingMembership) {
+      return res.status(400).json({ error: 'Membership with this name already exists' });
+    }
+
+    const newMembership = new Membership({
+      name,
+      type,
+      startDate: new Date(startDate).toISOString().split('T')[0], 
+      endDate: new Date(endDate).toISOString().split('T')[0],    
+      status: new Date(endDate) >= new Date() ? 'Active' : 'Expired',
+    });
+
+    const savedMembership = await newMembership.save(); 
+    res.status(201).json(savedMembership); 
+  } catch (error) {
+    console.error('Error adding membership:', error.message); 
+    res.status(500).json({ error: 'Unable to add membership', details: error.message }); 
+  }
+});
+
+
+// PUT endpoint to delete an existing membership and create a new one
+app.put('/memberships', async (req, res) => {
+  const { id } = req.params;
+  const { name, type, startDate, endDate } = req.body;
+
+  try {
+    // Delete the existing membership by name
+    const deletedMembership = await Membership.findOneAndDelete({ name });
+
+    // Log the deleted membership for debugging
+    console.log(`Deleted Membership: ${JSON.stringify(deletedMembership)}`);
+
+    // Check if the membership was actually deleted
+    if (!deletedMembership) {
+      console.log(`No membership found with name ${name} to delete.`);
+    }
+
+    // Create a new membership
+    const newMembership = new Membership({
+      name,
+      type,
+      startDate: new Date(startDate).toISOString().split('T')[0], 
+      endDate: new Date(endDate).toISOString().split('T')[0],     
+      status: new Date(endDate) >= new Date() ? 'Active' : 'Expired',
+    });
+
+    // Save the new membership to the database
+    const savedMembership = await newMembership.save();
+    console.log(`New Membership Created: ${JSON.stringify(savedMembership)}`); 
+
+    res.json(savedMembership); 
+  } catch (error) {
+    console.error('Error processing membership:', error);
+    res.status(500).json({ error: 'Unable to process membership' });
+  }
+});
+
+
+
+// Delete membership by name
+app.delete('/memberships/name/:name', async (req, res) => {
+  const { name } = req.params;
+
+  try {
+    // Find and delete the membership by name
+    const deletedMembership = await Membership.findOneAndDelete({ name });
+
+    if (!deletedMembership) {
+      return res.status(404).json({ error: 'Membership not found' });
+    }
+
+    res.status(204).send(); // No content response
+  } catch (error) {
+    console.error('Error deleting membership:', error);
+    res.status(500).json({ error: 'Unable to delete membership' });
+  }
+});
 
 // Logout endpoint
 app.post('/logout', (req, res) => {
