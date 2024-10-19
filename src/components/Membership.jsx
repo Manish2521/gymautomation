@@ -206,8 +206,8 @@ const Membership = () => {
       {/* Add/Edit Membership Popup */}
       {showPopup && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-5 rounded shadow-lg">
-            <h2 className="text-lg font-semibold mb-4">{editingMembership ? 'Edit Membership' : 'Add Membership'}</h2>
+          <div className="bg-white p-5 rounded-lg shadow-lg w-80">
+            <h2 className="text-xl font-bold mb-4">{editingMembership ? 'Edit Membership' : 'Add Membership'}</h2>
             <input
               type="text"
               placeholder="Name"
