@@ -24,8 +24,8 @@ const options = {
 const currentDateTime = new Date();
 const formattedDateTime = currentDateTime.toLocaleString('en-IN', options);  
 
-const MONGODB_URI = 'mongodb://localhost:27017/userdata'; // Corrected database name
-const ACCESS_TOKEN_SECRET = 'yourSecretKey'; // Replace with your desired secret key
+// const MONGODB_URI = 'mongodb://localhost:27017/userdata'; // Corrected database name
+// const ACCESS_TOKEN_SECRET = 'yourSecretKey'; // Replace with your desired secret key
 
 // Middleware
 app.use(bodyParser.json());
