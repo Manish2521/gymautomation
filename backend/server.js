@@ -9,7 +9,6 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-
 const options = {
   year: 'numeric',
   month: 'long',
@@ -24,8 +23,15 @@ const options = {
 const currentDateTime = new Date();
 const formattedDateTime = currentDateTime.toLocaleString('en-IN', options);  
 
-// const MONGODB_URI = 'mongodb://localhost:27017/userdata'; // Corrected database name
-// const ACCESS_TOKEN_SECRET = 'yourSecretKey'; // Replace with your desired secret key
+// Define your Employee schema
+const employeeSchema = new mongoose.Schema({
+  name: String,
+  role: String,
+  status: String,
+});
+
+// const MONGODB_URI = 'mongodb://localhost:27017/userdata';
+// const ACCESS_TOKEN_SECRET = 'yourSecretKey'; 
 
 // Middleware
 app.use(bodyParser.json());
@@ -61,6 +67,8 @@ const membershipSchema = new mongoose.Schema({
 });
 
 const Membership = mongoose.model('Membership', membershipSchema, 'membership'); 
+const Availableplans = mongoose.model('availablePlans', membershipSchema, 'availablePlans'); 
+const Employee = mongoose.model('employees', employeeSchema, 'employees'); 
 
 // Default route
 app.get("/", (req, res) => {
@@ -104,9 +112,116 @@ app.get('/memberships', async (req, res) => {
   } catch (error) {
     console.error('Error fetching memberships:', error);
     res.status(500).json({ error: 'Unable to fetch memberships' });
-    console.log("Error fetching memberships");
   }
 });
+
+
+
+// Membership route to get all availableplans
+app.get('/availableplans', async (req, res) => {
+  try {
+    const availablePlans = await Availableplans.find(); // Fetch all memberships from the database
+    res.json(availablePlans);
+  } catch (error) {
+    console.error('Error fetching Availableplans:', error);
+    res.status(500).json({ error: 'Unable to fetch Availableplans' });
+  }
+});
+
+
+
+
+// Membership route to get all employees
+app.get('/employees', async (req, res) => {
+  try {
+    const employee = await Employee.find(); // Fetch all employee from the database
+    res.json(employee);
+  } catch (error) {
+    console.error('Error fetching employee:', error);
+    res.status(500).json({ error: 'Unable to fetch employee' });
+  }
+});
+
+// POST endpoint to add a new employee
+app.post('/employees', async (req, res) => {
+  const { name, role } = req.body; // Get name and role from request body
+
+  try {
+    // Check if an employee with the same name already exists
+    const existingEmployee = await Employee.findOne({ name });
+
+    if (existingEmployee) {
+      return res.status(400).json({ error: 'Employee with this name already exists' });
+    }
+
+    const newEmployee = new Employee({
+      name,
+      role,
+    });
+
+    const savedEmployee = await newEmployee.save(); 
+    res.status(201).json(savedEmployee); 
+  } catch (error) {
+    console.error('Error adding employee:', error.message); 
+    res.status(500).json({ error: 'Unable to add employee', details: error.message }); 
+  }
+});
+
+// PUT endpoint to update an existing employee's details
+app.put('/employees', async (req, res) => {
+  const { id } = req.params; // Extract the employee ID from the URL
+  const { name, role } = req.body; // Extract name and role from request body
+
+  try {
+    // Find the employee by ID and update their details
+    const updatedEmployee = await Employee.findByIdAndUpdate(
+      name,
+      { name, role }, // Only update name and role
+      { new: true, runValidators: true } // Return the updated document and validate
+    );
+
+    // Log the updated employee for debugging
+    console.log(`Updated Employee: ${JSON.stringify(updatedEmployee)}`);
+
+    // Check if the employee was found and updated
+    if (!updatedEmployee) {
+      return res.status(404).json({ message: 'Employee not found' });
+    }
+
+    // Send the updated employee back as the response
+    res.json(updatedEmployee);
+  } catch (error) {
+    console.error('Error updating employee:', error);
+    res.status(500).json({ error: 'Unable to update employee' });
+  }
+});
+
+
+// DELETE endpoint to delete an employee by name
+app.delete('/employees/name/:name', async (req, res) => {
+  const { name } = req.params;
+
+  try {
+    // Find and delete the employee by name
+    const deletedEmployee = await Employee.findOneAndDelete({ name });
+
+    if (!deletedEmployee) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
+
+    res.status(204).send(); // No content response
+  } catch (error) {
+    console.error('Error deleting employee:', error);
+    res.status(500).json({ error: 'Unable to delete employee' });
+  }
+});
+
+
+
+
+
+
+
 
 
 // POST endpoint to add a new membership
@@ -136,7 +251,6 @@ app.post('/memberships', async (req, res) => {
     res.status(500).json({ error: 'Unable to add membership', details: error.message }); 
   }
 });
-
 
 // PUT endpoint to delete an existing membership and create a new one
 app.put('/memberships', async (req, res) => {
@@ -174,8 +288,6 @@ app.put('/memberships', async (req, res) => {
     res.status(500).json({ error: 'Unable to process membership' });
   }
 });
-
-
 
 // Delete membership by name
 app.delete('/memberships/name/:name', async (req, res) => {
