@@ -23,7 +23,7 @@ const Membership = () => {
   useEffect(() => {
     const fetchMemberships = async () => {
       try {
-        const response = await fetch('http://localhost:5000/memberships');
+        const response = await fetch('https://gymautomation.onrender.com/memberships');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -44,7 +44,7 @@ const Membership = () => {
 
   const handleAddMembership = async () => {
     try {
-      const response = await fetch('http://localhost:5000/memberships', {
+      const response = await fetch('https://gymautomation.onrender.com/memberships', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ const Membership = () => {
 
     const deleteMembership = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/memberships/name/${encodeURIComponent(membershipToDelete)}`, {
+        const response = await fetch(`https://gymautomation.onrender.com/memberships/name/${encodeURIComponent(membershipToDelete)}`, {
           method: 'DELETE',
         });
 
