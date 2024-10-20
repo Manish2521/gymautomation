@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
-require('dotenv').config(); 
+// require('dotenv').config(); 
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -30,8 +30,8 @@ const employeeSchema = new mongoose.Schema({
   status: String,
 });
 
-// const MONGODB_URI = 'mongodb://localhost:27017/userdata';
-// const ACCESS_TOKEN_SECRET = 'yourSecretKey'; 
+// const MONGODB_URI = 'mongodb://localhost:27017/userdata'; // Hard-coded MongoDB URI
+// const ACCESS_TOKEN_SECRET = 'yourSecretKey'; // Replace with your desired secret key
 
 // Middleware
 app.use(bodyParser.json());
@@ -42,7 +42,7 @@ app.use(cors({
 app.use(cookieParser());
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(MONGODB_URI, { // Use hard-coded MongoDB URI
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -66,9 +66,28 @@ const membershipSchema = new mongoose.Schema({
   status: { type: String, default: 'Active' }, 
 });
 
+
+// Equipment Schema
+const equipSchema = new mongoose.Schema({
+  name: String,
+  quantity: Number, 
+  status: { type: String, default: 'Available' }, 
+});
+
+// trainer Schema
+const trainerSchema = new mongoose.Schema({
+  name: { type: String, required: true, unique: true },
+  specialty: { type: String }, // Add this line
+  certification: { type: String }, // Add this line
+  status: { type: String, default: 'Available' }, 
+});
+
+
 const Membership = mongoose.model('Membership', membershipSchema, 'membership'); 
 const Availableplans = mongoose.model('availablePlans', membershipSchema, 'availablePlans'); 
 const Employee = mongoose.model('employees', employeeSchema, 'employees'); 
+const equip = mongoose.model('equipment', equipSchema, 'equipment'); 
+const trainer = mongoose.model('trainer', trainerSchema, 'trainer'); 
 
 // Default route
 app.get("/", (req, res) => {
@@ -83,14 +102,14 @@ app.post('/login', async (req, res) => {
     const user = await User.findOne({ username });
 
     if (user && user.password === password) {
-      const token = jwt.sign({ username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ username }, ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
 
       // Set the token in a cookie
       res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'Lax' });
       res.status(200).json({ message: 'Login successful' });
       console.log("Login successful");
 
-      // const ipify = await import('ipify');  
+      // Log login details
       console.log("-----------------------------------------------------------------------------------------------------------------------------------");
       console.log("User: " + user.username + " with Password: " + password + " logged IN to site: gymautomation.netlify.app at " + formattedDateTime);
       console.log("-----------------------------------------------------------------------------------------------------------------------------------");
@@ -218,10 +237,168 @@ app.delete('/employees/name/:name', async (req, res) => {
 
 
 
+// Equipment route to get all equipment
+app.get('/equipment', async (req, res) => {
+  try {
+    const equipment = await equip.find(); // Fetch all equipment from the database
+    res.json(equipment);
+  } catch (error) {
+    console.error('Error fetching equipment:', error);
+    res.status(500).json({ error: 'Unable to fetch equipment' });
+  }
+});
 
+// POST endpoint to add a new equipment item
+app.post('/equipment', async (req, res) => {
+  const { name, quantity, status } = req.body; // Get name, quantity, and status from request body
 
+  try {
+    // Check if an equipment item with the same name already exists
+    const existingEquipment = await equip.findOne({ name });
 
+    if (existingEquipment) {
+      return res.status(400).json({ error: 'Equipment with this name already exists' });
+    }
 
+    const newEquipment = new equip({
+      name,
+      quantity,
+      status,
+    });
+
+    const savedEquipment = await newEquipment.save();
+    res.status(201).json(savedEquipment);
+  } catch (error) {
+    console.error('Error adding equipment:', error.message);
+    res.status(500).json({ error: 'Unable to add equipment', details: error.message });
+  }
+});
+
+// PUT endpoint to update an existing equipment item's details
+app.put('/equipment/:id', async (req, res) => {
+  const { id } = req.params; // Extract the equipment ID from the URL
+  const { name, quantity, status } = req.body; // Extract name, quantity, and status from request body
+
+  try {
+    // Find the equipment by ID and update their details
+    const updatedEquipment = await equip.findByIdAndUpdate(
+      id,
+      { name, quantity, status }, // Update name, quantity, and status
+      { new: true, runValidators: true } // Return the updated document and validate
+    );
+
+    // Check if the equipment was found and updated
+    if (!updatedEquipment) {
+      return res.status(404).json({ message: 'Equipment not found' });
+    }
+
+    res.json(updatedEquipment); // Send the updated equipment back as the response
+  } catch (error) {
+    console.error('Error updating equipment:', error);
+    res.status(500).json({ error: 'Unable to update equipment' });
+  }
+});
+
+// DELETE endpoint to delete an equipment item by name
+app.delete('/equipment/name/:name', async (req, res) => {
+  const { name } = req.params;
+
+  try {
+    // Find and delete the equipment item by name
+    const deletedEquipment = await equip.findOneAndDelete({ name });
+
+    if (!deletedEquipment) {
+      return res.status(404).json({ error: 'Equipment not found' });
+    }
+
+    res.status(204).send(); // No content response
+  } catch (error) {
+    console.error('Error deleting equipment:', error);
+    res.status(500).json({ error: 'Unable to delete equipment' });
+  }
+});
+
+// Route to get all trainers
+app.get('/trainers', async (req, res) => {
+  try {
+    const trainers = await trainer.find(); // Fetch all trainers from the database
+    res.json(trainers);
+  } catch (error) {
+    console.error('Error fetching trainers:', error);
+    res.status(500).json({ error: 'Unable to fetch trainers' });
+  }
+});
+
+// POST endpoint to add a new trainer
+app.post('/trainers', async (req, res) => {
+  const { name, specialty, certification, status } = req.body; // Get trainer details from request body
+
+  try {
+    // Check if a trainer with the same name already exists
+    const existingTrainer = await trainer.findOne({ name });
+
+    if (existingTrainer) {
+      return res.status(400).json({ error: 'Trainer with this name already exists' });
+    }
+
+    const newTrainer = new trainer({
+      name,
+      specialty,
+      certification,
+      status,
+    });
+
+    const savedTrainer = await newTrainer.save();
+    res.status(201).json(savedTrainer);
+  } catch (error) {
+    console.error('Error adding trainer:', error.message);
+    res.status(500).json({ error: 'Unable to add trainer', details: error.message });
+  }
+});
+
+// PUT endpoint to update an existing trainer's details
+app.put('/trainers/:id', async (req, res) => {
+  const { id } = req.params; // Extract the trainer ID from the URL
+  const { name, specialty, certification, status } = req.body; // Extract trainer details from request body
+
+  try {
+    // Find the trainer by ID and update their details
+    const updatedTrainer = await trainer.findByIdAndUpdate(
+      id,
+      { name, specialty, certification, status }, // Update name, specialty, certification, and status
+      { new: true, runValidators: true } // Return the updated document and validate
+    );
+
+    // Check if the trainer was found and updated
+    if (!updatedTrainer) {
+      return res.status(404).json({ message: 'Trainer not found' });
+    }
+
+    res.json(updatedTrainer); // Send the updated trainer back as the response
+  } catch (error) {
+    console.error('Error updating trainer:', error);
+    res.status(500).json({ error: 'Unable to update trainer' });
+  }
+});
+
+// DELETE endpoint to delete a trainer by name
+app.delete('/trainers/name/:name', async (req, res) => {
+  const { name } = req.params;
+
+  try {
+    // Find and delete the trainer by name
+    const deletedTrainer = await trainer.findOneAndDelete({ name });
+
+    if (!deletedTrainer) {
+      return res.status(404).json({ error: 'Trainer not found' });
+    }
+
+    res.status(204).send(); // No content response
+  } catch (error) {
+    console.error('Error deleting trainer:', error);
+    res.status(500).json({ error: 'Unable to delete trainer' });
+  }
+});
 
 
 // POST endpoint to add a new membership
@@ -327,7 +504,7 @@ const authenticateToken = (req, res, next) => {
 
   if (!token) return res.status(401).json({ error: 'Unauthorized access' });
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+  jwt.verify(token, ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.status(403).json({ error: 'Invalid token' });
     req.user = user;
     next();
