@@ -126,7 +126,7 @@ const Membership = () => {
     setTimeout(() => {
       setAlertMessage('');
       setAlertType('');
-    }, 9000);
+    }, 3000);
   };
 
   const handleCloseAlert = () => {
