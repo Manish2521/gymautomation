@@ -37,6 +37,13 @@ const AvailablePlans = () => {
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
+      {/* Background blur and loading bar */}
+      {loading && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+        </div>
+      )}
+
       {/* Fixed Position Alert */}
       {showAlert && (
         <div 
