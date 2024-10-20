@@ -270,7 +270,7 @@ const GymEquipment = () => {
                 <div className="flex justify-end mt-4">
                   <button
                     className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 mr-2"
-                    onClick={handleDeleteEquipmente}
+                    onClick={handleDeleteEquipment}
                   >
                     Confirm
                   </button>
