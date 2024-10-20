@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
-// require('dotenv').config(); 
+require('dotenv').config(); 
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -42,7 +42,7 @@ app.use(cors({
 app.use(cookieParser());
 
 // MongoDB connection
-mongoose.connect(MONGODB_URI, { // Use hard-coded MongoDB URI
+mongoose.connect(process.env.MONGODB_URI, { // Use hard-coded MongoDB URI
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -102,7 +102,7 @@ app.post('/login', async (req, res) => {
     const user = await User.findOne({ username });
 
     if (user && user.password === password) {
-      const token = jwt.sign({ username }, ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
 
       // Set the token in a cookie
       res.cookie('token', token, { httpOnly: true, secure: false, sameSite: 'Lax' });
@@ -504,7 +504,7 @@ const authenticateToken = (req, res, next) => {
 
   if (!token) return res.status(401).json({ error: 'Unauthorized access' });
 
-  jwt.verify(token, ACCESS_TOKEN_SECRET, (err, user) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.status(403).json({ error: 'Invalid token' });
     req.user = user;
     next();
