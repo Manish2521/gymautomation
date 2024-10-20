@@ -43,20 +43,29 @@ const Membership = () => {
   }, []);
 
   const handleAddMembership = async () => {
+    if (!newMembership.name || !newMembership.type || !newMembership.startDate || !newMembership.endDate) {
+      setAlertMessage('Please fill in all fields');
+      setAlertType('error');
+      autoDismissAlert();
+      return;
+    }
+
+    const membershipToAdd = { ...newMembership };
+
     try {
       const response = await fetch('https://gymautomation.onrender.com/memberships', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newMembership),
+        body: JSON.stringify(membershipToAdd),
       });
 
       if (response.ok) {
         const newData = await response.json();
         setMemberships([...memberships, newData]);
-        setShowPopup(false); // Close the popup
-        setNewMembership({ name: '', type: '', startDate: '', endDate: '' }); // Reset form
+        setShowPopup(false);
+        setNewMembership({ name: '', type: '', startDate: '', endDate: '' });
         setAlertMessage('Membership added successfully');
         setAlertType('success');
         autoDismissAlert();
@@ -94,8 +103,8 @@ const Membership = () => {
         setAlertType('error');
         autoDismissAlert();
       } finally {
-        setShowConfirmModal(false); // Close the confirmation modal
-        setMembershipToDelete(null); // Reset membership to delete
+        setShowConfirmModal(false);
+        setMembershipToDelete(null);
       }
     };
 
@@ -103,8 +112,8 @@ const Membership = () => {
   };
 
   const handleConfirmDelete = (name) => {
-    setMembershipToDelete(name); // Set the membership name to delete
-    setShowConfirmModal(true); // Show the confirmation modal
+    setMembershipToDelete(name);
+    setShowConfirmModal(true);
   };
 
   const handleEditMembership = (membership) => {
@@ -129,6 +138,13 @@ const Membership = () => {
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
+      {/* Background blur and loading bar */}
+      {loading && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+        </div>
+      )}
+
       {/* Fixed Position Alert */}
       {alertMessage && (
         <div 
@@ -150,17 +166,15 @@ const Membership = () => {
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-auto w-full sm:max-w-5xl mt-3">
         <div className="pb-4 bg-white dark:bg-gray-900 flex justify-between p-4">
-          {/* Add Button */}
           <button
             onClick={() => {
-              // Reset newMembership to clear any existing data
-              setNewMembership({ name: '', type: '', startDate: '', endDate: '' }); 
-              setEditingMembership(null); // Reset editing state
-              setShowPopup(true); // Open the popup
+              setNewMembership({ name: '', type: '', startDate: '', endDate: '' });
+              setEditingMembership(null);
+              setShowPopup(true);
             }}
             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
           >
-            Add Member
+            Add Membership
           </button>
         </div>
 
@@ -175,28 +189,29 @@ const Membership = () => {
                   <th scope="col" className="px-4 py-2">Type</th>
                   <th scope="col" className="px-4 py-2">Start Date</th>
                   <th scope="col" className="px-4 py-2">End Date</th>
-                  <th scope="col" className="px-4 py-2">Status</th>
                   <th scope="col" className="px-4 py-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {memberships.map((item, index) => (
-                  <tr key={index} className={new Date(item.endDate) >= new Date() ? 'bg-green-100' : 'bg-red-100'}>
-                    <td className="px-4 py-2">{item.name}</td>
-                    <td className="px-4 py-2">{item.type}</td>
-                    <td className="px-4 py-2">{item.startDate}</td>
-                    <td className="px-4 py-2">{item.endDate}</td>
-                    <td className="px-4 py-2">{new Date(item.endDate) >= new Date() ? 'Active' : 'Expired'}</td>
-                    <td className="px-4 py-2 flex space-x-2">
-                      <button onClick={() => handleEditMembership(item)} className="text-blue-500 hover:underline">
-                        <FontAwesomeIcon icon={faPenToSquare} className="h-5 w-5 inline" />
-                      </button>
-                      <button onClick={() => handleConfirmDelete(item.name)} className="text-red-500 hover:underline">
-                        <FontAwesomeIcon icon={faTrash} className="h-5 w-5 inline" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {memberships.map((item, index) => {
+                  const isExpired = new Date(item.endDate) < new Date(); 
+                  return (
+                    <tr key={index} className={isExpired ? 'bg-red-100' : 'bg-green-100'}>
+                      <td className="px-4 py-2">{item.name}</td>
+                      <td className="px-4 py-2">{item.type}</td>
+                      <td className="px-4 py-2">{item.startDate}</td>
+                      <td className="px-4 py-2">{item.endDate}</td>
+                      <td className="px-4 py-2 flex space-x-2">
+                        <button onClick={() => handleEditMembership(item)} className="text-blue-500 hover:underline">
+                          <FontAwesomeIcon icon={faPenToSquare} className="h-5 w-5 inline" />
+                        </button>
+                        <button onClick={() => handleConfirmDelete(item.name)} className="text-red-500 hover:underline">
+                          <FontAwesomeIcon icon={faTrash} className="h-5 w-5 inline" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -213,67 +228,77 @@ const Membership = () => {
               placeholder="Name"
               value={newMembership.name}
               onChange={(e) => setNewMembership({ ...newMembership, name: e.target.value })}
-              className="border p-2 mb-2 w-full"
-              required // Making the field mandatory
+              className="w-full mb-3 p-2 border border-gray-300 rounded-md"
             />
             <select
               value={newMembership.type}
               onChange={(e) => setNewMembership({ ...newMembership, type: e.target.value })}
-              className="border p-2 mb-2 w-full"
-              required // Making the field mandatory
+              className="w-full border rounded-md mb-2 px-2 py-1"
+              required
             >
-              <option value="" disabled>Select Membership Type</option>
+              <option value="">Type</option>
               <option value="Gym">Gym</option>
-              <option value="Zumba">Zumba</option>
               <option value="Yoga">Yoga</option>
+              <option value="Zumba">Zumba</option>
+              <option value="Pilates">Pilates</option>
+              <option value="Dance">Dance</option>
+              <option value="Boxing">Boxing</option>
+              <option value="Martial Art">Martial Arts</option>
             </select>
+
             <input
               type="date"
-              placeholder="Start Date"
               value={newMembership.startDate}
               onChange={(e) => setNewMembership({ ...newMembership, startDate: e.target.value })}
-              className="border p-2 mb-2 w-full"
-              required // Making the field mandatory
+              className="w-full mb-3 p-2 border border-gray-300 rounded-md"
             />
             <input
               type="date"
-              placeholder="End Date"
               value={newMembership.endDate}
               onChange={(e) => setNewMembership({ ...newMembership, endDate: e.target.value })}
-              className="border p-2 mb-2 w-full"
-              required // Making the field mandatory
+              className="w-full mb-3 p-2 border border-gray-300 rounded-md"
             />
-            <button
-              onClick={handleAddMembership}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              {editingMembership ? 'Update Membership' : 'Add Membership'}
-            </button>
-            <button
-              onClick={() => setShowPopup(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 ml-2"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Confirmation Modal */}
-      {showConfirmModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-5 rounded shadow-lg w-11/12 max-w-md md:max-w-lg">
-            <h2 className="text-lg font-semibold mb-4">Confirm Delete</h2>
-            <p>Are you sure you want to delete this membership?</p>
-            <div className="mt-4 flex justify-center space-x-2">
-              <button onClick={handleDeleteMembership} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Yes</button>
-              <button onClick={() => setShowConfirmModal(false)} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">No</button>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowPopup(false)}
+                className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddMembership}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+              >
+                {editingMembership ? 'Update' : 'Add'}
+              </button>
             </div>
           </div>
         </div>
       )}
 
-
+      {/* Confirm Delete Modal */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-5 rounded-lg shadow-lg w-80">
+            <h2 className="text-xl font-bold mb-4">Confirm Delete</h2>
+            <p className="mb-4">Are you sure you want to delete {membershipToDelete}?</p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteMembership}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
