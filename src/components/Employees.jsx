@@ -139,6 +139,13 @@ const Employee = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
+      
+      {/* Background blur and loading bar */}
+      {loading && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+        </div>
+      )}
 
       {/* Fixed Position Alert */}
       {alertMessage && (
@@ -159,7 +166,7 @@ const Employee = () => {
         </div>
       )}
 
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-auto w-full sm:max-w-5xl mt-3">
+      <div className={`relative overflow-x-auto shadow-md sm:rounded-lg mx-auto w-full sm:max-w-5xl mt-3 ${loading ? 'blur-md' : ''}`}>
         <div className="pb-4 bg-white dark:bg-gray-900 flex justify-between p-4">
           {/* Add Button */}
           <button
@@ -220,41 +227,41 @@ const Employee = () => {
               required
               className="border rounded-lg p-2 mb-2 w-full"
             />
-          <select
-            value={newEmployee.role}
-            onChange={(e) => setNewEmployee({ ...newEmployee, role: e.target.value })}
-            className="w-full border rounded-md mb-2 px-2 py-1"
-            required // Mark as required
-          >
-            <option value="">Select Role</option>
-            <option value="Manager">Manager</option>
-            <option value="Receptionist">Receptionist</option>
-            {/* Add more roles as needed */}
-            <option value="Sales">Sales</option>
-            <option value="Technical Support">Technical Support</option>
-          </select>
-            <button onClick={handleAddEmployee} className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-              {editingEmployee ? 'Update Employee' : 'Add Employee'}
-            </button>
-            <button onClick={() => setShowPopup(false)} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 ml-2">
-              Cancel
-            </button>
+            <select
+              value={newEmployee.role}
+              onChange={(e) => setNewEmployee({ ...newEmployee, role: e.target.value })}
+              required
+              className="border rounded-lg p-2 mb-4 w-full"
+            >
+              <option value="">Select Role</option>
+              <option value="developer">Developer</option>
+              <option value="manager">Manager</option>
+              <option value="designer">Designer</option>
+            </select>
+            <div className="flex justify-between">
+              <button onClick={handleAddEmployee} className="bg-blue-500 text-white px-4 py-2 rounded-lg">
+                {editingEmployee ? 'Update' : 'Add'}
+              </button>
+              <button onClick={() => setShowPopup(false)} className="bg-gray-500 text-white px-4 py-2 rounded-lg">
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Confirmation Modal for Deletion */}
+      {/* Confirm Delete Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-5 rounded-lg shadow-lg w-80">
-            <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
+            <h2 className="text-lg font-bold mb-4">Confirm Delete</h2>
             <p>Are you sure you want to delete {employeeToDelete}?</p>
-            <div className="flex justify-end mt-4">
-              <button onClick={handleDeleteEmployee} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
-                Delete
+            <div className="flex justify-between mt-4">
+              <button onClick={handleDeleteEmployee} className="bg-red-500 text-white px-4 py-2 rounded-lg">
+                Yes
               </button>
-              <button onClick={() => setShowConfirmModal(false)} className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 ml-2">
-                Cancel
+              <button onClick={() => setShowConfirmModal(false)} className="bg-gray-500 text-white px-4 py-2 rounded-lg">
+                No
               </button>
             </div>
           </div>
