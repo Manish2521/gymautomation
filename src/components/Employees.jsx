@@ -128,7 +128,7 @@ const Employee = () => {
     setTimeout(() => {
       setAlertMessage('');
       setAlertType('');
-    }, 9000);
+    }, 2000);
   };
 
   const handleCloseAlert = () => {
