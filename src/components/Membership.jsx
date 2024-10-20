@@ -278,22 +278,22 @@ const Membership = () => {
 
       {/* Confirm Delete Modal */}
       {showConfirmModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-5 rounded-lg shadow-lg w-80">
-            <h2 className="text-xl font-bold mb-4">Confirm Delete</h2>
-            <p className="mb-4">Are you sure you want to delete {membershipToDelete}?</p>
-            <div className="flex justify-end space-x-3">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-96">
+            <h2 className="text-lg font-semibold mb-4">Confirm Deletion</h2>
+            <p>Are you sure you want to delete {membershipToDelete}?</p>
+            <div className="flex justify-end mt-4">
               <button
-                onClick={() => setShowConfirmModal(false)}
-                className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500"
+                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 mr-2"
+                onClick={handleDeleteMembership}
               >
-                Cancel
+                Confirm
               </button>
               <button
-                onClick={handleDeleteMembership}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+                onClick={() => setShowConfirmModal(false)}
               >
-                Delete
+                Cancel
               </button>
             </div>
           </div>
