@@ -268,7 +268,7 @@ const Trainers = () => {
       >
         <option value="Select">Select</option>
         <option value="Available">Available</option>
-        <option value="Under Maintenance">Under Maintenance</option>
+        <option value="Not Available">Not Available</option>
       </select>
 
       <div className="flex justify-end space-x-3">
