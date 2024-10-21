@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import { Disclosure } from '@headlessui/react';
 import { Link } from 'react-router-dom';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import cz from './cz.jpg';
+import axios from 'axios';
 
 const initialNavigation = [
   { name: 'Home', to: '/landingpage', current: false },
-  { name: 'New Registration', to: '/dashboard', current: false },
-  { name: 'Dashboard', to: '/dashboard', current: false },
   { name: 'Membership', to: '/membership', current: false },
   { name: 'Trainer', to: '/Trainers', current: false },
   { name: 'Employees', to: '/Employees', current: false },
@@ -19,15 +18,41 @@ function classNames(...classes) {
 }
 
 export default function Navbar() {
-  const [navigation, setNavigation] = React.useState(initialNavigation);
-  const [showConfirmModal, setShowConfirmModal] = React.useState(false);
+  const [navigation, setNavigation] = useState(initialNavigation);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [role, setRole] = useState(null); // State to store user role
   const navigate = useNavigate(); 
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const username = localStorage.getItem('username');
+      const token = localStorage.getItem('token');
+      if (username && token) {
+        try {
+          // Fetch the user role from the server using the correct endpoint
+          const userResponse = await axios.get(`http://localhost:5000/role/${username}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          const userRole = userResponse.data.role;
+          console.log("-----------------------");
+          console.log(userRole);
+          console.log("-----------------------");
+          setRole(userRole);
+        } catch (error) {
+          console.error('Failed to fetch user role:', error);
+        }
+      }
+    };
+    fetchUserRole();
+  }, []);
+  
 
   // Define handleLogout
   const handleLogout = async () => {
     try {
       await fetch('https://gymautomation.onrender.com/logout', { method: 'POST', credentials: 'include' });
       localStorage.removeItem('token');
+      localStorage.removeItem('username');
       navigate('/'); 
     } catch (error) {
       console.error('Logout failed:', error);
@@ -72,6 +97,16 @@ export default function Navbar() {
                           {item.name}
                         </Link>
                       ))}
+
+                      {/* Conditionally render Dashboard only for superadmin */}
+                      {role === 'superadmin' && (
+                        <Link
+                          to="/dashboard"
+                          className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        >
+                          Dashboard
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -102,6 +137,16 @@ export default function Navbar() {
                     {item.name}
                   </Link>
                 ))}
+
+                {/* Conditionally render Dashboard for mobile view */}
+                {role === 'superadmin' && (
+                  <Link
+                    to="/dashboard"
+                    className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                  >
+                    Dashboard
+                  </Link>
+                )}
               </div>
             </Disclosure.Panel>
           </>
