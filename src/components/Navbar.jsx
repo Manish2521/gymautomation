@@ -30,7 +30,7 @@ export default function Navbar() {
       if (username && token) {
         try {
           // Fetch the user role from the server using the correct endpoint
-          const userResponse = await axios.get(`http://localhost:5000/role/${username}`, {
+          const userResponse = await axios.get(`https://gymautomation.onrender.com/role/${username}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           const userRole = userResponse.data.role;
