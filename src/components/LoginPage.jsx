@@ -44,6 +44,7 @@ const LoginPage = () => {
       if (response.status === 200) {
         const token = generateToken();  
         localStorage.setItem('token', token);
+        localStorage.setItem('username', username);
         navigate('/landingpage');
       } else {
         setError('An unexpected error occurred. Please try again.');
