@@ -53,6 +53,7 @@ mongoose.connect(process.env.MONGODB_URI, { // Use hard-coded MongoDB URI
 const userSchema = new mongoose.Schema({
   username: String,
   password: String, // You should use hashed passwords in production
+  role: { type: String, required: true }
 });
 
 const User = mongoose.model('User', userSchema);
@@ -133,6 +134,119 @@ app.get('/memberships', async (req, res) => {
     res.status(500).json({ error: 'Unable to fetch memberships' });
   }
 });
+
+
+
+
+// Get all users endpoint
+app.get('/users', async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.status(200).json(users);
+  } catch (err) {
+    console.error('Get users error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+// Get user by ID endpoint
+app.get('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id);
+    if (user) {
+      return res.status(200).json(user);
+    } else {
+      return res.status(404).json({ message: 'User not found' });
+    }
+  } catch (err) {
+    console.error('Get user error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Add new user endpoint
+app.post('/users', async (req, res) => {
+  const { username, password, role } = req.body;
+
+  try {
+    // Check if the username already exists
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Username already exists' });
+    }
+
+    // Create new user if the username is unique
+    const newUser = new User({ username, password, role });
+    const savedUser = await newUser.save();
+    
+    return res.status(201).json(savedUser);
+  } catch (err) {
+    console.error('Add user error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+// Update user endpoint
+app.put('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const { username, password, role } = req.body;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(id, { username, password, role }, { new: true });
+    if (updatedUser) {
+      return res.status(200).json(updatedUser);
+    } else {
+      return res.status(404).json({ message: 'User not found' });
+    }
+  } catch (err) {
+    console.error('Update user error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+// Delete user endpoint
+app.delete('/users/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (deletedUser) {
+      return res.status(200).json({ message: 'User deleted successfully' });
+    } else {
+      return res.status(404).json({ message: 'User not found' });
+    }
+  } catch (err) {
+    console.error('Delete user error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
+
+
+
+// Get user role endpoint
+app.get('/role/:username', async (req, res) => {
+  const { username } = req.params;
+  try {
+    const user = await User.findOne({ username });
+    if (user) {
+      return res.status(200).json({ role: user.role });
+    } else {
+      return res.status(404).json({ message: 'User not found' });
+    }
+  } catch (err) {
+    console.error('Get role error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
 
 
 
