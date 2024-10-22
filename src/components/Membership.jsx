@@ -11,6 +11,7 @@ const Membership = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [membershipToDelete, setMembershipToDelete] = useState(null);
+  const navigate = useNavigate();
   const [newMembership, setNewMembership] = useState({
     name: '',
     type: '',
