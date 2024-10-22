@@ -11,6 +11,7 @@ const Employee = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState(null);
+  const navigate = useNavigate();
   const [newEmployee, setNewEmployee] = useState({
     name: '',
     role: '',
