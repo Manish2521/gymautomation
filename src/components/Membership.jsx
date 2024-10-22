@@ -289,18 +289,23 @@ const Membership = () => {
               <option value="Martial Art">Martial Arts</option>
             </select>
 
+            <div className="flex justify-center">
             <input
               type="date"
               value={newMembership.startDate}
               onChange={(e) => setNewMembership({ ...newMembership, startDate: e.target.value })}
-              className="w-full mb-3 p-2 border border-gray-300 rounded-md"
+              className="w-full mb-3 p-2 border border-gray-300 rounded-md md:w-80"
             />
+            </div>
+            <div className="flex justify-center">
             <input
               type="date"
               value={newMembership.endDate}
               onChange={(e) => setNewMembership({ ...newMembership, endDate: e.target.value })}
-              className="w-full mb-3 p-2 border border-gray-300 rounded-md"
+              className="w-full mb-3 p-2 border border-gray-300 rounded-md md:w-80"
             />
+            </div>
+            
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setShowPopup(false)}
