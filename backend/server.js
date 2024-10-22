@@ -136,6 +136,25 @@ app.get('/memberships', async (req, res) => {
 });
 
 
+// Check if user exists endpoint
+app.get('/checkUser', async (req, res) => {
+  const username = req.query.username;
+
+  try {
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ exists: false, message: 'User not found' });
+    }
+
+    return res.status(200).json({ exists: true, message: 'User exists' });
+  } catch (err) {
+    console.error('Check user error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
 
 
 // Get all users endpoint
