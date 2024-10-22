@@ -11,6 +11,7 @@ const GymEquipment = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [equipmentToDelete, setEquipmentToDelete] = useState(null);
+    const navigate = useNavigate();
     const [newEquipment, setNewEquipment] = useState({
         name: '',
         quantity: '',
