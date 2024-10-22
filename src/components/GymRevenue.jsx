@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Footer from './Footer'; 
 
 const GymRevenue = () => {
+  const navigate = useNavigate();
   const revenueData = [
     { month: 'January', revenue: '$1000' },
     { month: 'February', revenue: '$1200' },
