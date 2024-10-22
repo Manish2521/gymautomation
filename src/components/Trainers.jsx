@@ -10,6 +10,7 @@ const Trainers = () => {
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const navigate = useNavigate();
   const [trainerToDelete, setTrainerToDelete] = useState(null);
   const [newTrainer, setNewTrainer] = useState({
     name: '',
