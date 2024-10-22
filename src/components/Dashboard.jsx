@@ -18,6 +18,49 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
 
+  // Check if user role is superadmin 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
+
+    const checkUserRole = async () => {
+      try {
+        const response = await fetch(`https://gymautomation.onrender.com/role/${username}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.role !== 'superadmin') {
+          localStorage.removeItem('token');
+          localStorage.removeItem('username');
+          navigate('/error');
+        }
+      } catch (error) {
+        console.error('Error checking user role:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        navigate('/error');
+      }
+    };
+
+    if (token && username) {
+      checkUserRole();
+    } else {
+      navigate('/error');
+    }
+  }, [navigate]);
+  
+
+
+
+  
 
 // Check if user exist in db or not  
   useEffect(() => {
