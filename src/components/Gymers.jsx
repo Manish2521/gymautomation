@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Footer from './Footer'; 
 
 const Gymers = () => {
+    const navigate = useNavigate();
     const gymersData = [
         { name: 'John Doe', membership: 'Annual', joined: '2023-01-15', status: 'Active' },
         { name: 'Jane Smith', membership: 'Monthly', joined: '2023-09-05', status: 'Inactive' },
