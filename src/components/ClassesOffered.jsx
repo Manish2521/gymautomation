@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Footer from './Footer'; 
 
 const ClassesOffered = () => {
+    const navigate = useNavigate();
     const classesData = [
         { name: 'Yoga', instructor: 'Sarah Thompson' },
         { name: 'Pilates', instructor: 'Emily Johnson' },
