@@ -9,6 +9,7 @@ const AvailablePlans = () => {
   const [alertType, setAlertType] = useState('success');
   const [loading, setLoading] = useState(true);
   const [showAlert, setShowAlert] = useState(false); // Added for alert display
+  const navigate = useNavigate();
 
 
   
