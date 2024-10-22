@@ -289,6 +289,7 @@ const Membership = () => {
               <option value="Martial Art">Martial Arts</option>
             </select>
 
+            <div>Start Date</div>
             <div className="flex justify-center">
             <input
               type="date"
@@ -297,6 +298,7 @@ const Membership = () => {
               className="w-full mb-3 p-2 border border-gray-300 rounded-md md:w-80"
             />
             </div>
+            <div>End Date</div>
             <div className="flex justify-center">
             <input
               type="date"
