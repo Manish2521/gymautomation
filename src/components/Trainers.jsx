@@ -21,6 +21,44 @@ const Trainers = () => {
   const [editingTrainer, setEditingTrainer] = useState(null);
 
 
+  
+// Check if user exist in db or not  
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
+    
+    const checkUserInDB = async () => {
+      try {
+        const response = await fetch(`https://gymautomation.onrender.com/checkUser?username=${username}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (!response.ok) {
+          throw new Error('User not found or session expired');
+        }
+        const data = await response.json();
+        if (!data.exists) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('username');
+          navigate('/error');
+        }
+      } catch (error) {
+        console.error('Error checking user:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        navigate('/error');
+      }
+    };
+  
+    if (token && username) {
+      checkUserInDB();
+    } else {
+      navigate('/error');
+    }
+  }, [navigate]);
+
+
   useEffect(() => {
     const fetchTrainers = async () => {
       try {
