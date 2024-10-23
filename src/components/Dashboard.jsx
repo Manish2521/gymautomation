@@ -316,7 +316,7 @@ const Dashboard = () => {
                   {/* Password logic Starts */}
                   <td className="px-4 py-2 flex items-center">
                       {/* Prevent structure break on clicking the toggle eye button */}
-                      <div className="flex items-center" style={{ width: '150px' }}> 
+                      <div className="flex items-center" style={{ width: '50px' }}> 
                         <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>
       
                           {showPassword.has(index) ? user.password : '•'.repeat(user.password.length)}
