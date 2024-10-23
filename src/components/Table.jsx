@@ -28,14 +28,14 @@ const Table = () => {
       title: 'Trainers',
       value: 2,
       description: 'Total number of certified trainers.',
-      colorClass: 'bg-red-500',
+      colorClass: 'bg-blue-500',
       link: '/Trainers', 
     },
     {
       title: 'Gym Equipment',
       value: 23,
       description: 'Total equipment.',
-      colorClass: 'bg-blue-500',
+      colorClass: 'bg-red-500',
       link: '/GymEquipment',
     },
     {
