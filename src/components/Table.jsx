@@ -21,7 +21,7 @@ const Table = () => {
       title: 'Trainers',
       value: 2,
       description: 'Total number of certified trainers.',
-      colorClass: 'bg-orange-500',
+      colorClass: 'bg-indigo-500',
       link: '/Trainers', 
     },
     {
