@@ -21,7 +21,7 @@ const Table = () => {
       title: 'Trainers',
       value: 2,
       description: 'Total number of certified trainers.',
-      colorClass: 'bg-emerald-500',
+      colorClass: 'bg-orange-500',
       link: '/Trainers', 
     },
     {
@@ -56,7 +56,7 @@ const Table = () => {
       title: 'Gymers',
       value: 15,
       description: 'Number of gym users.',
-      colorClass: 'bg-cyan-500',
+      colorClass: 'bg-green-500',
       link: '/Gymers', 
     }
 
