@@ -18,20 +18,6 @@ const Table = () => {
       link: '/availableplans', 
     },
     {
-      title: 'Gym Revenue',
-      value: '$5000',
-      description: 'Total revenue.',
-      colorClass: 'bg-purple-500',
-      link: '/GymRevenue', 
-    },
-    {
-      title: 'Gymers',
-      value: 15,
-      description: 'Number of gym users.',
-      colorClass: 'bg-red-500',
-      link: '/Gymers', 
-    },
-    {
       title: 'Employees',
       value: 4,
       description: 'Total employees.',
@@ -59,6 +45,22 @@ const Table = () => {
       colorClass: 'bg-indigo-500',
       link: '/ClassesOffered', 
     },
+    {
+      title: 'Gym Revenue',
+      value: '$5000',
+      description: 'Total revenue.',
+      colorClass: 'bg-purple-500',
+      link: '/GymRevenue', 
+    },
+    {
+      title: 'Gymers',
+      value: 15,
+      description: 'Number of gym users.',
+      colorClass: 'bg-red-500',
+      link: '/Gymers', 
+    }
+
+    
   ];
 
   return (
