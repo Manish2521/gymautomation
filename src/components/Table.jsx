@@ -56,7 +56,7 @@ const Table = () => {
       title: 'Gymers',
       value: 15,
       description: 'Number of gym users.',
-      colorClass: 'bg-red-500',
+      colorClass: 'bg-yellow-500',
       link: '/Gymers', 
     }
 
