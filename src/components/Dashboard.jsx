@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrash, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
@@ -15,8 +15,18 @@ const Dashboard = () => {
   const [alertType, setAlertType] = useState(''); // 'success' or 'error'
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [showPassword, setShowPassword] = useState(new Set());
   const navigate = useNavigate();
 
+  const handleTogglePassword = (index) => {
+    const updatedSet = new Set(showPassword);
+    if (updatedSet.has(index)) {
+      updatedSet.delete(index); // Hide password
+    } else {
+      updatedSet.add(index); // Show password
+    }
+    setShowPassword(updatedSet);
+  };
 
   // Check if user role is superadmin 
   useEffect(() => {
@@ -301,7 +311,26 @@ const Dashboard = () => {
               {users.map((user, index) => (
                 <tr key={index} className="bg-white border-b">
                   <td className="px-4 py-2">{user.username}</td>
-                  <td className="px-4 py-2">{user.password}</td>
+                  {/* <td className="px-4 py-2">{'•'.repeat(user.password.length)}</td> */}
+                  
+                  {/* Password logic Starts */}
+                  <td className="px-4 py-2 flex items-center">
+                      {/* Prevent structure break on clicking the toggle eye button */}
+                      <div className="flex items-center" style={{ width: '150px' }}> 
+                        <span className="mr-2" style={{ whiteSpace: 'nowrap' }}>
+      
+                          {showPassword.has(index) ? user.password : '•'.repeat(user.password.length)}
+                        </span>
+                        <button
+                          onClick={() => handleTogglePassword(index)}
+                          className="text-dark"
+                        >
+                          <FontAwesomeIcon icon={showPassword.has(index) ? faEye : faEyeSlash} />
+                        </button>
+                      </div>
+                    </td>
+                  {/* Password logic ends */}
+                  
                   <td className="px-4 py-2">{user.role}</td>
                   <td className="px-4 py-2 flex space-x-2">
                     <button onClick={() => {
