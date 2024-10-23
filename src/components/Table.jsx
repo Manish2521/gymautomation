@@ -11,13 +11,6 @@ const Table = () => {
       link: '/membership', 
     },
     {
-      title: 'Available Plans',
-      value: 5,
-      description: 'Total number of plans available.',
-      colorClass: 'bg-green-500',
-      link: '/availableplans', 
-    },
-    {
       title: 'Employees',
       value: 4,
       description: 'Total employees.',
@@ -37,6 +30,13 @@ const Table = () => {
       description: 'Total equipment.',
       colorClass: 'bg-red-500',
       link: '/GymEquipment',
+    },
+    {
+      title: 'Available Plans',
+      value: 5,
+      description: 'Total number of plans available.',
+      colorClass: 'bg-green-500',
+      link: '/availableplans', 
     },
     {
       title: 'Classes Offered',
