@@ -6,7 +6,7 @@ function Footer() {
   return (
     <div className="flex flex-col items-center w-full bg-white mt-12">
       <footer className="w-full text-gray-700 bg-gray-100 body-font">
-        <div className="container flex flex-col items-center px-5 py-24 mx-auto md:flex-row">
+        <div className="container flex flex-col items-center px-5 py-20 mx-auto md:flex-row">
           <div className="flex flex-col items-center text-center">
             <Link to="/">
               <img className="h-8 w-auto mb-4" src={cz} alt="Gym Management Company Logo" />
@@ -44,9 +44,9 @@ function Footer() {
                 <li className="mt-3">
                   <a className="text-gray-500 cursor-pointer hover:text-gray-900">About Us</a>
                 </li>
-                <li className="mt-3">
+                {/* <li className="mt-3">
                   <a className="text-gray-500 cursor-pointer hover:text-gray-900">Our Trainers</a>
-                </li>
+                </li> */}
               </nav>
             </div>
             <div className="w-full px-4 lg:w-1/4 md:w-1/2">
@@ -55,9 +55,9 @@ function Footer() {
                 <li className="mt-3">
                   <a className="text-gray-500 cursor-pointer hover:text-gray-900">Membership Plans</a>
                 </li>
-                <li className="mt-3">
+                {/* <li className="mt-3">
                   <a className="text-gray-500 cursor-pointer hover:text-gray-900">Fitness Programs</a>
-                </li>
+                </li> */}
               </nav>
             </div>
             <div className="w-full px-4 lg:w-1/4 md:w-1/2">
@@ -66,9 +66,9 @@ function Footer() {
                 <li className="mt-3">
                   <a className="text-gray-500 cursor-pointer hover:text-gray-900">Contact Support</a>
                 </li>
-                <li className="mt-3">
+                {/* <li className="mt-3">
                   <a className="text-gray-500 cursor-pointer hover:text-gray-900">Help Center</a>
-                </li>
+                </li> */}
               </nav>
             </div>
             <div className="w-full px-4 lg:w-1/4 md:w-1/2">
@@ -77,9 +77,9 @@ function Footer() {
                 <li className="mt-3">
                   <a className="text-gray-500 cursor-pointer hover:text-gray-900">Terms of Service</a>
                 </li>
-                <li className="mt-3">
+                {/* <li className="mt-3">
                   <a className="text-gray-500 cursor-pointer hover:text-gray-900">Privacy Policy</a>
-                </li>
+                </li> */}
               </nav>
             </div>
           </div>

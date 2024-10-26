@@ -122,7 +122,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('https://gymautomation.onrender.com/users'); // Update endpoint
+        const response = await fetch('https://gymautomation.onrender.com/users'); 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -285,7 +285,7 @@ const Dashboard = () => {
         </div>
       )}
 
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-auto w-full sm:max-w-5xl mt-3">
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-auto w-full sm:max-w-5xl mt-3 mb-40">
         <div className="pb-4 bg-white flex justify-between p-4">
           <button onClick={() => {
               setNewUser({ username: '', password: '', role: 'admin' });
