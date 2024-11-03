@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import cz from './cz.jpg';
 import axios from 'axios';
+import LoadingBar from 'react-top-loading-bar';
+import { useLocation } from 'react-router-dom';
 
 const initialNavigation = [
   { name: 'Home', to: '/landingpage', current: false },
@@ -20,8 +22,27 @@ function classNames(...classes) {
 export default function Navbar() {
   const [navigation, setNavigation] = useState(initialNavigation);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [role, setRole] = useState(null); // State to store user role
+  const [role, setRole] = useState(null); 
   const navigate = useNavigate(); 
+  const [progress, setProgress] = useState(0);
+  const location = useLocation();
+
+  useEffect(() => {
+    setProgress(40);
+    setTimeout(() => setProgress(70), 100);
+    setTimeout(() => setProgress(100), 800);
+    return () => setProgress(0);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const currentPath = location.pathname;
+    setNavigation((prevNavigation) =>
+      prevNavigation.map((item) => ({
+        ...item,
+        current: item.to === currentPath,
+      }))
+    );
+  }, [location]);
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -153,6 +174,13 @@ export default function Navbar() {
         )}
       </Disclosure>
 
+      <LoadingBar
+        color="#3b82f6"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+        style={{ zIndex: 999 }}
+      />
+      
       {/* Confirm Logout Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
